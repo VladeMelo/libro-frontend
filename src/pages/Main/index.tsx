@@ -74,7 +74,7 @@ const Main = () => {
             <MovieImage>
               <img
                 src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`}
-                alt="Imagem"
+                alt='Movie'
               />
             </MovieImage>
 

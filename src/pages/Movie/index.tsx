@@ -65,7 +65,7 @@ const Movie = () => {
         >
           <img
             src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
-            alt='Image'
+            alt='Movie'
           />
 
           <h1>{movie.original_title}</h1>
