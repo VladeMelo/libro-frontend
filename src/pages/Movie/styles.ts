@@ -17,6 +17,8 @@ export const HeaderContainer = styled.div`
 
   div {
     position: relative;
+    
+    cursor: pointer;
 
     img {
       display: block;

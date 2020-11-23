@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { FiArrowLeftCircle, FiArrowRightCircle } from 'react-icons/fi';
 
 import { Container, HeaderContainer, MoviesContainer, Movie, MovieImage, MovieIntroduction, Button, ChangePageContainer } from './styles';
 
+import libroLogo from '../../assets/libro-logo.png'
 import GlobalStyles from '../../styles/global'
 import api from '../../services/api';
 
@@ -24,10 +25,13 @@ interface PopularMoviesProps { // to remove 'results' from PopularMoviesDTO
 }
 
 const Main = () => {
+  const location = useLocation<{
+    previousPage?: number; // to come back to the page that the person was looking at
+  }>();
   const history = useHistory();
 
   const [movies, setMovies] = useState<PopularMoviesProps[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(location.state?.previousPage || 1);
 
   useEffect(() => {
     api.get<PopularMoviesDTO>('/movie/popular', {
@@ -39,9 +43,10 @@ const Main = () => {
 
   const handleSelectMovie = useCallback((movie) => {
     history.push('/movie', {
-      id: movie.id
+      id: movie.id,
+      currentPage
     })
-  }, [history]);
+  }, [history, currentPage]);
 
   const handleChangeToPreviousPage = useCallback(() => {
     if (currentPage !== 1) {
@@ -60,7 +65,7 @@ const Main = () => {
       <HeaderContainer>
         <div>
           <img
-            src='http://libro.studio/wp-content/uploads/2020/09/logo_assinatura.png'
+            src={libroLogo}
             alt='Logo'
           />
 

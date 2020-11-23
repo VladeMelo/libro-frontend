@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { Container, HeaderContainer, MovieContainer, MovieImg } from './styles';
 
+import libroLogo from '../../assets/libro-logo.png'
 import GlobalStyles from '../../styles/global'
 import api from '../../services/api';
 
@@ -21,7 +22,9 @@ interface MovieDTO {
 const Movie = () => {
   const location = useLocation<{
     id: string;
+    currentPage: number;
   }>();
+  const history = useHistory();
 
   const [movie, setMovie] = useState<MovieDTO>({} as MovieDTO);
 
@@ -36,6 +39,12 @@ const Movie = () => {
     api.get<MovieDTO>(`/movie/${location.state.id}`).then(response => setMovie(response.data));
   }, [location.state.id]);
 
+  const handleGoBack = useCallback(() => {
+    history.push('/', {
+      previousPage: location.state.currentPage
+    })
+  }, [history, location.state.currentPage]);
+
   const releaseYear = useMemo(() => {
     if (movie.release_date !== undefined) {
       const [year, , ] = movie.release_date.split('-'); // year is the first
@@ -49,9 +58,11 @@ const Movie = () => {
       <GlobalStyles />
       
       <HeaderContainer>
-        <div>
+        <div
+          onClick={handleGoBack}
+        >
           <img
-            src='http://libro.studio/wp-content/uploads/2020/09/logo_assinatura.png'
+            src={libroLogo}
             alt='Logo'
           />
 
