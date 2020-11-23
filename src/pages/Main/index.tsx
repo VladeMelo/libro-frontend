@@ -35,7 +35,7 @@ const Main = () => {
         page: currentPage
       }
     }).then(response => setMovies(response.data.results));
-  }, [currentPage])
+  }, [currentPage]);
 
   const handleSelectMovie = useCallback((movie) => {
     history.push('/movie', {

@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 import { Container, HeaderContainer, MovieContainer, MovieImg } from './styles';
 
@@ -19,21 +21,28 @@ interface MovieDTO {
 const Movie = () => {
   const location = useLocation<{
     id: string;
-  }>()
+  }>();
 
   const [movie, setMovie] = useState<MovieDTO>({} as MovieDTO);
 
   useEffect(() => {
+    AOS.init({
+      duration: 1600,
+      delay: 800 // to let the image try to render
+    });
+  }, [])
+
+  useEffect(() => {
     api.get<MovieDTO>(`/movie/${location.state.id}`).then(response => setMovie(response.data));
-  }, [location.state.id])
+  }, [location.state.id]);
 
   const releaseYear = useMemo(() => {
     if (movie.release_date !== undefined) {
       const [year, , ] = movie.release_date.split('-'); // year is the first
-      console.log(year);
+      
       return year;
     }
-  }, [movie.release_date])
+  }, [movie.release_date]);
 
   return(
     <Container>
@@ -51,11 +60,14 @@ const Movie = () => {
       </HeaderContainer>
 
       <MovieContainer>
-        <MovieImg>
+        <MovieImg
+          data-aos="zoom-in"
+        >
           <img
             src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
             alt='Image'
           />
+
           <h1>{movie.original_title}</h1>
           <h2>Released: {releaseYear}</h2>
           <h3>Rating: {movie.vote_average}</h3>
@@ -65,10 +77,8 @@ const Movie = () => {
               <h4>{genre.name}</h4>
             ))}
           </div>
-
         </MovieImg>
       </MovieContainer>
-
     </Container>
   )
 }

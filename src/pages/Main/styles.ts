@@ -84,7 +84,6 @@ export const MovieIntroduction = styled.div`
 
   h2 {
     font-size: 14px;
-    color: rgba(249, 123, 22, 0.9);
     color: #c9c9c9;
   }
 
